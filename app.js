@@ -13,13 +13,13 @@ app.use(cors())
 
 // import routes
 const authRoutes = require('./routes/auth')
-const postRoutes = require('./routes/post')
+const geventRoutes = require('./routes/gevent')
 
 app.use('/auth', authRoutes)
-app.use('/post', postRoutes)
+app.use('/gevent', geventRoutes)
 
 app.get('/', (req, res) => {
-  res.send('Welcome Post REST API')
+  res.send('Welcome gevent REST API')
 })
 
 mongoose.connect(process.env.DB_CONNECTION,{

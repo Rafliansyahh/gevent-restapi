@@ -1,7 +1,15 @@
 const mongoose = require('mongoose')
 
-const postSchema = mongoose.Schema({
-    content:{
+const geventSchema = mongoose.Schema({
+    nama_event:{
+        type: String,
+        required: true
+    },
+    alamat:{
+        type: String,
+        required: true
+    },
+    deskripsi:{
         type: String,
         required: true
     },
@@ -9,17 +17,9 @@ const postSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref : 'User',
         required: true
-    },
-    created_date:{
-        type: Date,
-        default: Date.now
-    },
-    modified_date:{
-        type: Date,
-        default: null
     }
 },{
     versionKey: false
 })
 
-module.exports = mongoose.model('Post', postSchema,'post')
+module.exports = mongoose.model('Gevent', geventSchema,'Gevent')

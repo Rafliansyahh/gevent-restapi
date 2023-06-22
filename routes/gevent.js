@@ -1,109 +1,112 @@
-const express = require('express')
-const router = express.Router()
-const Post = require('../models/Post')
+const express = require('express');
+const router = express.Router();
+const Gevent = require('../models/Gevent');
 
-function result(succ, msg, details){
-    if(details){
-        return{
-            success: succ,
-            message: msg,
-            data: details 
-        }
-    } else{
-        return{
-            succes: succ,
-            message: msg
-        }
-    }
+function result(succ, msg, details) {
+  if (details) {
+    return {
+      success: succ,
+      message: msg,
+      data: details,
+    };
+  } else {
+    return {
+      success: succ,
+      message: msg,
+    };
+  }
 }
 
-router.get('/', async(req, res) => {
-    try{
-        const post = await Post.aggregate([
-            {
-                $lookup: {
-                    from: 'user',
-                    localField: 'user_id',
-                    foreignField: '_id',
-                    as: 'userData'
-                }
-            },
-            {
-                $set:{
-                    id: '$_id',
-                    username: {$arrayElemAt: ['$userData.username', 0]},
-                    created_date: {$dateToString: {format: '%d-%m-%Y %H:%M:%S', date: '$created_date', timezone: '+07:00'}},
-                    modified_date: {$dateToString: {format: '%d-%m-%Y %H:%M:%S', date: '$modified_date', timezone: '+07:00'}},
-                }
-            },
-            {
-                $project: {
-                    userData:0,
-                    _id:0
-                }
-            }
-        ]);
-        
-        if (post.length > 0) {
-            res.status(200).json(result(1, 'Retrieve Data Success!', post))
-        } else{
-            res.status(200).json(result(0, 'Zero Data!'))
-        }
-    } catch (error){
-        res.status(500).json(result(0, error.message))
+router.get('/', async (req, res) => {
+  try {
+    const gevent = await Gevent.aggregate([
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'user_id',
+          foreignField: '_id',
+          as: 'userData',
+        },
+      },
+      {
+        $set: {
+          id: '$_id',
+          username: { $arrayElemAt: ['$userData.username', 0] },
+        },
+      },
+      {
+        $project: {
+          userData: 0,
+          _id: 0,
+        },
+      },
+    ]);
+
+    if (gevent.length > 0) {
+      res.status(200).json(result(1, 'Retrieve Data Success!', gevent));
+    } else {
+      res.status(404).json(result(0, 'Zero Data!'));
     }
-})
+  } catch (error) {
+    res.status(500).json(result(0, error.message));
+  }
+});
 
-router.post('/', async (req,res) =>{
-    const inputPost = new Post({
-        content: req.body.content,
-        user_id: req.body.user_id
-    })
+router.post('/', async (req, res) => {
+    const inputGevent = new Gevent({
+      nama_event: req.body.nama_event,
+      alamat: req.body.alamat,
+      deskripsi: req.body.deskripsi,
+      user_id: req.body.user_id,
+    });
 
     try{
-        const post = await inputPost.save()
-        res.status(200).json(result(1,'Insert Post Success!'))
-    }catch(error){
-        res.status(500).json(result(0, error.message))
+    const gevent = await inputGevent.save();
+    res.status(200).json(result(1, 'Insert Gevent Success!'));
+    } catch (error) {
+    res.status(500).json(result(0, error.message));
     }
-})
+});
 
-router.put('/', async (req,res) =>{
+router.put('/', async (req, res) => {
     const data = {
-        id: req.body.id,
-        content: req.body.content,
-        modified_date: Date.now()
+      id: req.body.id,
+      nama_event: req.body.nama_event,
+      alamat: req.body.alamat,
+      deskripsi: req.body.deskripsi,
     }
-
     try{
-        const post = await Post.updateOne({
-            _id: data.id
-        },data)
+    const gevent = await Gevent.updateOne(
+      {
+        _id: data.id,
+      },
+      data
+    );
 
-        if (post.matchedCount > 0 ) {
-            res.status(200).json(result(1,'Update Post Success!'))
-        } else {
-            res.status(200).json(result(0,'Update Post Failed!'))
-        }
-    } catch (error){
-        res.status(500).json(result(0, error.message))
+    if (gevent.matchedCount > 0) {
+      res.status(200).json(result(1, 'Update Gevent Success!'));
+    } else {
+      res.status(200).json(result(0, 'Update Gevent Failed!'));
     }
-})
+  } catch (error) {
+    res.status(500).json(result(0, error.message));
+  }
+});
 
-router.delete('/:id', async (req,res) => {
-    try{
-        const post = await Post.deleteOne({
-            _id: req.params.id
-        })
+router.delete('/:id', async (req, res) => {
+  try {
+    const gevent = await Gevent.deleteOne({
+      _id: req.params.id,
+    });
 
-        if (post.deletedCount > 0){
-            res.status(200).json(result(1,'Delete Post Success!'))
-        }else{
-            res.status(200).json(result(0,'Delete Post Failed!'))
-        }
-    }catch (error){
-        res.status(500).json(result(0, error.message))
+    if (gevent.deletedCount > 0) {
+      res.status(200).json(result(1, 'Delete Gevent Success!'));
+    } else {
+      res.status(200).json(result(0, 'Delete Gevent Failed!'));
     }
-})
+  } catch (error) {
+    res.status(500).json(result(0, error.message));
+  }
+});
 
-module.exports = router
+module.exports = router;

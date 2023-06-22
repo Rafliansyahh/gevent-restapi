@@ -1,7 +1,7 @@
 {
   "name": "gevent-restapi",
   "version": "1.0.0",
-  "description": "rest api menggunakan express.js",
+  "description": "project uas pab lanjutan",
   "main": "app.js",
   "scripts": {
     "dev": "node app.js",
@@ -14,6 +14,10 @@
   ],
   "author": "Muhammad Rafliansyah",
   "license": "ISC",
+  "bugs":{
+    "url" : "https://github.com/Rafliansyahh/gevent-restapi/issues"
+  },
+  "homepage": "https://github.com/Rafliansyahh/gevent-restapi#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
