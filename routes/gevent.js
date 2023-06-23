@@ -54,7 +54,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
     const inputGevent = new Gevent({
-      namaevent: req.body.nama_event,
+      namaevent: req.body.namaevent,
       alamat: req.body.alamat,
       deskripsi: req.body.deskripsi,
       user_id: req.body.user_id,
@@ -71,7 +71,7 @@ router.post('/', async (req, res) => {
 router.put('/', async (req, res) => {
     const data = {
       id: req.body.id,
-      namaevent: req.body.nama_event,
+      namaevent: req.body.namaevent,
       alamat: req.body.alamat,
       deskripsi: req.body.deskripsi,
     }

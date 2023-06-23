@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const geventSchema = mongoose.Schema({
-    nama_event:{
+    namaevent:{
         type: String,
         required: true
     },
